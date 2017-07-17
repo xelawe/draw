@@ -147,6 +147,7 @@ void draw_clear_screen();
 void draw_set_pixel(draw_x_type x, draw_y_type y, uns8 colour);
 uns8 draw_get_pixel(draw_x_type x, draw_y_type y);
 
+void draw_bitmap(draw_x_type x, draw_y_type y, uns8 colour, char *bitmap, boolean LSB);
 void draw_bitmap(draw_x_type x, draw_y_type y, uns8 colour, char *bitmap);
 
 void draw_line(draw_x_type x0, draw_y_type y0, draw_x_type x1, draw_y_type y1, uns8 colour);
