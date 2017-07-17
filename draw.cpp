@@ -528,7 +528,13 @@ void draw_bitmap(draw_x_type x, draw_y_type y, uns8 colour, char *bitmap) {
 
 
 uns8 bitpos = 0;
-uns8 bytepos = 0;
+	
+//uns8 bytepos = 0; 
+// uns8 means a maximum of 255 Bytes -> 2040px	
+// a 200x200px eink display has a max of 40000px => 5000 Bytes
+//--> new data type, so pictures with maximum pixel count can be displayed
+unsigned int bytepos = 0; 
+	
 uns8 value;
 draw_x_type bitmap_width = bitmap[0];
 draw_y_type bitmap_height = bitmap[1];
