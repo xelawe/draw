@@ -523,11 +523,16 @@ void draw_filled_circle2(draw_x_type x_centre, draw_y_type y_centre, int r, uns8
 
 
 
-// currently only handles monochrome bitmaps
+// Bitmap draw, where pixels in Bytes are ordered from right to left
 void draw_bitmap(draw_x_type x, draw_y_type y, uns8 colour, char *bitmap) {
+	draw_bitmap(x, y, colour, bitmap, true);
+}
 
-
+// currently only handles monochrome bitmaps
+void draw_bitmap(draw_x_type x, draw_y_type y, uns8 colour, char *bitmap, boolean LSB) {
 uns8 bitpos = 0;
+uns8 bitpos_end;
+uns8 bitpos_start;
 	
 //uns8 bytepos = 0; 
 // uns8 means a maximum of 255 Bytes -> 2040px	
@@ -542,18 +547,31 @@ uns8 bitmap_bpp = bitmap[2];
 draw_x_type xbitmap;
 draw_y_type ybitmap;
 
-
 	bytepos = 3;	// first byte of data - 1
-	bitpos = 0b10000000;	// left most bit
 	
+	if (LSB){
+	  bitpos_end = 0b10000000;	// left most bit	
+          bitpos_start =  0b00000001;
+	}
+	else{
+	  bitpos = 0b00000001;	// right most bit	
+          bitpos_start =  0b10000000;		
+	}
+	
+	bitpos = bitpos_end;
 	for (xbitmap = 0; xbitmap < bitmap_width; xbitmap++) {
 		for (ybitmap = 0; ybitmap < bitmap_height; ybitmap++) {
-			if (bitpos == 0b10000000) {
-				bitpos = 0b00000001;
+			if (bitpos == bitpos_end) {
+				bitpos = bitpos_start;
 				bytepos++;
 				value = bitmap[bytepos];
 			} else {
+				if (LSB){
 				bitpos = bitpos << 1;
+				}
+				else{
+				bitpos = bitpos >> 1;						
+				}
 			}
 			if (value & bitpos) {
 				#ifdef DRAW_HW_Y_ORIGIN_BOTTOM_LEFT
